@@ -1,10 +1,12 @@
+using sql_oriented_app.Controllers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 //config database string connection
-//builder.Services.AddDbContext<Controller>(
+//builder.Services.AddDbContext<>(
 //    options =>
 //        options.UseSqlServer(builder.Configuration["Cars_StringConnection"])
 //    );
@@ -29,7 +31,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-    //builder.Configuration.AddUserSecrets<Controller>();
+    builder.Configuration.AddUserSecrets<HomeController>();
 }
 
 app.UseHttpsRedirection();
