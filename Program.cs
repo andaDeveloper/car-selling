@@ -6,7 +6,7 @@ builder.Services.AddControllersWithViews();
 //config database string connection
 //builder.Services.AddDbContext<Controller>(
 //    options =>
-//        options.UseSqlServer(builder.Configuration[""])
+//        options.UseSqlServer(builder.Configuration["Cars_StringConnection"])
 //    );
 
 //config sessions
