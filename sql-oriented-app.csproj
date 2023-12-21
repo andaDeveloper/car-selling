@@ -7,4 +7,12 @@
     <RootNamespace>sql_oriented_app</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove=".gitignore" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".gitignore" />
+  </ItemGroup>
+
 </Project>
