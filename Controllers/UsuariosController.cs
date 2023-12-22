@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,7 +23,8 @@ namespace sql_oriented_app.Controllers
         // GET: Usuarios
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Usuarios.ToListAsync());
+            //return View(await _context.Usuarios.ToListAsync());
+            return View();
         }
 
         // GET: Usuarios/Details/5
@@ -42,24 +45,45 @@ namespace sql_oriented_app.Controllers
             return View(usuario);
         }
 
-        // GET: Usuarios/Create
-        public IActionResult Create()
+
+        public string HashPassword(string password)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+        public async Task<IActionResult> Create()
         {
             return View();
         }
+        
+
 
         // POST: Usuarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Idusuario,Nombre,Password,Cargo")] Usuario usuario)
+        public async Task<IActionResult> Create([Bind("Nombre,Password,Cargo")] Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(usuario);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                string encryptedPass = HashPassword(usuario.Password);
+                var rol = usuario.Cargo;
+
+                await _context.Database.ExecuteSqlRawAsync
+                    ("exec sp_create @p0, @p1, @p2",
+                    usuario.Nombre, encryptedPass, rol);
+
+                return RedirectToAction(nameof(Create));
             }
             return View(usuario);
         }

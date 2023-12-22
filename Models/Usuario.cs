@@ -11,7 +11,7 @@ public partial class Usuario
 
     public string? Password { get; set; }
 
-    public string? Cargo { get; set; }
+    public int? Cargo { get; set; }
 
     public virtual ICollection<Vendedore> Vendedores { get; set; } = new List<Vendedore>();
 }
