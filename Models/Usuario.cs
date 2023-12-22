@@ -9,9 +9,9 @@ public partial class Usuario
 
     public string? Nombre { get; set; }
 
-    public string? Password { get; set; }
+    public string? Contra { get; set; }
 
     public int? Cargo { get; set; }
 
-    public virtual ICollection<Vendedore> Vendedores { get; set; } = new List<Vendedore>();
+    public virtual ICollection<Vendedor> Vendedors { get; set; } = new List<Vendedor>();
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace sql_oriented_app.Models;
 
-public partial class Vendedore
+public partial class Vendedor
 {
     public int Idvendedor { get; set; }
 
@@ -13,9 +13,9 @@ public partial class Vendedore
 
     public int? Idsucursal { get; set; }
 
-    public virtual Sucursale? IdsucursalNavigation { get; set; }
+    public virtual Sucursal? IdsucursalNavigation { get; set; }
 
     public virtual Usuario? IdusuarioNavigation { get; set; }
 
-    public virtual ICollection<Venta> Venta { get; set; } = new List<Venta>();
+    public virtual ICollection<Ventum> Venta { get; set; } = new List<Ventum>();
 }
