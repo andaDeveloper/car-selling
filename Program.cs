@@ -18,6 +18,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 }
     );
+//Consultar Procesos almacenados
 
 //config secrets
 builder.Configuration.AddEnvironmentVariables();
