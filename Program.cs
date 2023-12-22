@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using sql_oriented_app.Controllers;
+using sql_oriented_app.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,10 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 //config database string connection
-//builder.Services.AddDbContext<>(
-//    options =>
-//        options.UseSqlServer(builder.Configuration["Cars_StringConnection"])
-//    );
+builder.Services.AddDbContext<ConcesionarioDbContext>(
+    options =>
+        options.UseSqlServer(builder.Configuration["Cars_StringConnection"])
+    );
 
 //config sessions
 builder.Services.AddDistributedMemoryCache();
@@ -31,7 +33,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-    builder.Configuration.AddUserSecrets<HomeController>();
+    builder.Configuration.AddUserSecrets<UsuariosController>();
 }
 
 app.UseHttpsRedirection();
