@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using sql_oriented_app.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 
 namespace sql_oriented_app.Controllers
 {
@@ -69,16 +70,16 @@ namespace sql_oriented_app.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken][Bind("Nombre,Contra,Cargo")]
-        public async Task<IActionResult> Create(Usuario usuario)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("IDUsuario,Nombre,Contra,Cargo")] Usuario usuario)
         {
-            string encryptedPass = HashPassword(usuario.Contra);
 
             if (ModelState.IsValid)
             {
+                string encryptedPass = HashPassword(usuario.Contra);
 
                 await _context.Database.ExecuteSqlRawAsync(
-                "exec sp_create @p0, @p1, @p2",
+                "exec SP_Crear @p0, @p1, @p2",
                 usuario.Nombre, encryptedPass, usuario.Cargo);
 
                 return RedirectToAction(nameof(Index));
