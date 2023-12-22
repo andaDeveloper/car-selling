@@ -152,5 +152,65 @@ namespace sql_oriented_app.Controllers
         {
             return _context.Usuarios.Any(e => e.Idusuario == id);
         }
+
+
+
+        // GET: Usuarios/Edit/5
+        public async Task<IActionResult> Ingresar(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            return View(usuario);
+        }
+
+        // POST: Usuarios/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Ingresar(int id, [Bind("Idusuario,Nombre,Password,Cargo")] Usuario usuario)
+        {
+            if (id != usuario.Idusuario)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(usuario);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UsuarioExists(usuario.Idusuario))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(usuario);
+        }
+
+
+
+
+
+
+
     }
 }

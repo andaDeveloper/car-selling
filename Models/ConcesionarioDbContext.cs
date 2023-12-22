@@ -78,7 +78,6 @@ public partial class ConcesionarioDbContext : DbContext
             entity.HasKey(e => e.Idusuario).HasName("PK__Usuarios__5231116907F6335A");
 
             entity.Property(e => e.Idusuario).HasColumnName("IDUsuario");
-            entity.Property(e => e.Cargo).HasMaxLength(50);
             entity.Property(e => e.Nombre).HasMaxLength(50);
             entity.Property(e => e.Password).HasMaxLength(50);
         });
