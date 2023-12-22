@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using sql_oriented_app.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace sql_oriented_app.Controllers
 {
@@ -47,19 +50,39 @@ namespace sql_oriented_app.Controllers
         {
             return View();
         }
+        public string HashPassword(string password)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
 
         // POST: Usuarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Idusuario,Nombre,Contra,Cargo")] Usuario usuario)
+        //[ValidateAntiForgeryToken][Bind("Nombre,Contra,Cargo")]
+        public async Task<IActionResult> Create(Usuario usuario)
         {
+            string encryptedPass = HashPassword(usuario.Contra);
+
             if (ModelState.IsValid)
             {
-                _context.Add(usuario);
-                await _context.SaveChangesAsync();
+
+                await _context.Database.ExecuteSqlRawAsync(
+                "exec sp_create @p0, @p1, @p2",
+                usuario.Nombre, encryptedPass, usuario.Cargo);
+
                 return RedirectToAction(nameof(Index));
+
             }
             return View(usuario);
         }
