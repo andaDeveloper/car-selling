@@ -78,7 +78,7 @@ namespace sql_oriented_app.Controllers
             {
                 string encryptedPass = HashPassword(usuario.Contra);
 
-                await _context.Database.ExecuteSqlRawAsync(
+                _context.Database.ExecuteSqlRaw(
                 "exec SP_Crear @p0, @p1, @p2",
                 usuario.Nombre, encryptedPass, usuario.Cargo);
 
